@@ -6,11 +6,11 @@ export class EventController {
   createEvent = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const {
-        organizer_id, 
-        event_name, 
-        event_description, 
-        original_price, 
-        start_date, 
+        organizer_id,
+        event_name,
+        event_description,
+        original_price,
+        start_date,
         end_date,
         location_id,
         total_seats,
@@ -18,18 +18,18 @@ export class EventController {
       }: IEvent & IEventCategory = req.body;
 
       const event = await eventAction.createEvent({
-        organizer_id, 
-        event_name, 
-        event_description, 
-        original_price, 
-        start_date, 
+        organizer_id,
+        event_name,
+        event_description,
+        original_price,
+        start_date,
         end_date,
         location_id,
         total_seats
-      }, 
-      {
-        category_id // Pass category_id to the createEvent function
-      });
+      },
+        {
+          category_id // Pass category_id to the createEvent function
+        });
 
       return res.status(201).json({
         message: 'Create event success',

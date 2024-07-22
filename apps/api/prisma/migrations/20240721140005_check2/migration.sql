@@ -263,8 +263,8 @@ ALTER TABLE `Event_Category` ADD CONSTRAINT `Event_Category_event_id_fkey` FOREI
 -- AddForeignKey
 ALTER TABLE `Event_Category` ADD CONSTRAINT `Event_Category_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `Category`(`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
--- RenameIndex
-ALTER TABLE `promotion` RENAME INDEX `Promotion_event_id_fkey` TO `Promotion_event_id_idx`;
+-- -- RenameIndex
+-- ALTER TABLE `promotion` RENAME INDEX `Promotion_event_id_fkey` TO `Promotion_event_id_idx`;
 
--- RenameIndex
-ALTER TABLE `referral` RENAME INDEX `Referral_referrer_id_fkey` TO `Referral_referrer_id_idx`;
+-- -- RenameIndex
+-- ALTER TABLE `referral` RENAME INDEX `Referral_referrer_id_fkey` TO `Referral_referrer_id_idx`;
