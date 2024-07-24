@@ -19,7 +19,9 @@ function generateReferralCode(length: number): string {
 // Function to hash password
 async function hashingPassword(password: string): Promise<string> {
     const salt = await genSalt(10);
-    return await hash(password, salt);
+    const hashedPass = await hash(password, salt)
+
+    return hashedPass;
 }
 
 export class AuthAction {

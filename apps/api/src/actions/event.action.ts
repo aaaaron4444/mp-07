@@ -6,10 +6,10 @@ import { IEventCategory } from '@/interfaces/event.interface';
 class EventAction {
 
   findEventByAllDataExceptOrganizerIdAndCategory = async (
-    event_name: string, 
-    event_description: string, 
-    original_price: number, 
-    start_date: Date, 
+    event_name: string,
+    event_description: string,
+    original_price: number,
+    start_date: Date,
     end_date: Date,
     location_id: number,
     total_seats: number) => {
@@ -17,13 +17,13 @@ class EventAction {
       const event = await prisma.event.findFirst({
         where: {
           AND: [
-            {event_name},
-            {event_description},
-            {original_price},
-            {start_date},
-            {end_date},
-            {location_id},
-            {total_seats}
+            { event_name },
+            { event_description },
+            { original_price },
+            { start_date },
+            { end_date },
+            { location_id },
+            { total_seats }
           ],
         },
       });
@@ -39,7 +39,7 @@ class EventAction {
     try {
       const event = await prisma.event.findUnique({
         where: {
-          event_id,
+          event_id: Number(event_id),
         },
       });
 
@@ -51,19 +51,20 @@ class EventAction {
 
   createEvent = async (
     {
-      organizer_id, 
-      event_name, 
-      event_description, 
-      original_price, 
-      start_date, 
+      organizer_id,
+      event_name,
+      event_description,
+      original_price,
+      start_date,
       end_date,
       location_id,
-      total_seats
+      total_seats,
+      earlybird_promo,
     }: IEvent,
     {
       category_id
     }: IEventCategory,
-    ) => {
+  ) => {
     try {
 
       // Check if organizer_id exists and is an organizer
@@ -72,30 +73,31 @@ class EventAction {
       });
 
       if (organizer?.role_id !== 2) {
-        throw new Error('User is not exist or not an organizer');
+        throw new Error('User does not exist or not an organizer');
       }
 
-      const isDuplicate = await this.findEventByAllDataExceptOrganizerIdAndCategory( 
-        event_name, 
-        event_description, 
-        original_price, 
-        start_date, 
+      const isDuplicate = await this.findEventByAllDataExceptOrganizerIdAndCategory(
+        event_name,
+        event_description,
+        original_price,
+        start_date,
         end_date,
         location_id,
-        total_seats );
-      if (isDuplicate) throw new Error('The same exact event already exists');
+        total_seats);
+      if (isDuplicate) throw new Error('The same event already exists');
 
       const event = await prisma.event.create({
         data: {
-          organizer_id, 
-          event_name, 
-          event_description, 
-          original_price, 
-          start_date, 
+          organizer_id,
+          event_name,
+          event_description,
+          original_price,
+          start_date,
           end_date,
           location_id,
           total_seats,
-          available_seats: total_seats
+          available_seats: total_seats,
+          earlybird_promo
         },
       });
 
@@ -106,7 +108,7 @@ class EventAction {
         },
       });
 
-      const data = {...event, ...event_category}
+      const data = { ...event, ...event_category }
       return data;
     } catch (error) {
       throw error;
@@ -152,6 +154,51 @@ class EventAction {
 
     return { events, total_count };
   };
-}
 
+  findEventsByOrganizerId = async (query: any) => {
+    const { organizer_id } = query;
+
+    if (!organizer_id) {
+      throw new Error('Organizer ID is required');
+    }
+
+    try {
+      const events = await prisma.event.findMany({
+        select: {
+          event_id: true,
+          organizer_id: true,
+          event_name: true,
+          event_description: true,
+          original_price: true,
+          start_date: true,
+          end_date: true,
+          total_seats: true,
+          available_seats: true,
+          categories: {
+            select: {
+              category: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+          location: {
+            select: {
+              city_name: true,
+            },
+          },
+        },
+        where: {
+          organizer_id,
+        },
+      });
+
+      return events;
+    } catch (error) {
+      throw error;
+    }
+  };
+  
+}
 export default new EventAction();
