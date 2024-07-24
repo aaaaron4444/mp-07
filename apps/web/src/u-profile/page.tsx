@@ -23,7 +23,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
-import { updateUserProfile } from '@/lib/features/auth/authSlices';
+import { updateUserProfile } from '@/lib/features/authSlice';
 
 const UserProfile = () => {
     const { user } = useAppSelector((state) => state.auth);

@@ -1,4 +1,4 @@
-import HomeEventOrganizerView from '@/view/homepage-event-organizer';
+import HomeEventOrganizerView from '@/view/home/homepage-event-organizer';
 
 function EventOrganizerPage() {
     return (

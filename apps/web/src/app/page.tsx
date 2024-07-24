@@ -1,11 +1,11 @@
-import HomeNotUserView from '@/view/home/homepage-not';
+import HomeNotUserView from '@/view/home/homepage-not-user';
 
 
 function NotUserPage() {
   return (
     <main>
       
-      <HomeNonUserView/>
+      <HomeNotUserView/>
     </main>
   );
 }

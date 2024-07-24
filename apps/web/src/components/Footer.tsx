@@ -3,10 +3,7 @@
 import React from 'react';
 import { Box, Container, Typography, Link } from '@mui/material';
 import { usePathname } from 'next/navigation';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import YouTubeIcon from '@mui/icons-material/YouTube';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import TwitterIcon from '@mui/icons-material/Twitter';
+
 
 function Footer() {
   const path: string = usePathname();

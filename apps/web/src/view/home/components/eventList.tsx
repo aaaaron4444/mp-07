@@ -6,7 +6,7 @@ import EventCard from './eventCard';
 import { Grid, TextField, Box, CircularProgress, MenuItem, Select, InputLabel, FormControl, SelectChangeEvent, Typography } from '@mui/material';
 import CustomPagination from './customPage';
 import debounce from 'lodash/debounce';
-import { locations, categories } from '../../lib/constant';
+import { locations, categories } from '../../../lib/constant';
 
 interface Event {
     event_id: number;
