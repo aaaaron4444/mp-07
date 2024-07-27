@@ -40,6 +40,7 @@ class UserAction {
     try {
       const user = await prisma.user.findFirst({
         select: {
+          user_id: true,
           username: true,
           email: true,
           first_name: true,
@@ -82,7 +83,6 @@ class UserAction {
 
   getUsers = async () => {
     const users = await prisma.user.findMany();
-
     return users;
   };
 }

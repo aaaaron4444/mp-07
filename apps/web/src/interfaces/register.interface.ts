@@ -6,4 +6,4 @@ export interface IRegister {
     accountType: string;
     password: string;
     referral: string;
-}
+  }

@@ -5,7 +5,6 @@ export type User = {
   first_name: string;
   last_name: string;
   role_name: string;
-  referral_code: string;
 };
 
 declare global {

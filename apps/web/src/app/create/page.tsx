@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, FormikProps } from 'formik';
 import * as Yup from 'yup';
+import { IEvent } from '@/interfaces/event.interface';
 
-import { IEvent } from '../interfaces/events.interface';
 import {
     Box,
     Container,
@@ -20,7 +20,8 @@ import {
     DialogTitle,
     DialogContent,
     DialogContentText,
-    DialogActions,
+    DialogActions, FormControlLabel,
+    Checkbox
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -39,6 +40,7 @@ const eventSchema = Yup.object({
     location: Yup.string().required('Location is required'),
     category: Yup.string().required('Category is required'),
     totalSeats: Yup.number().required('Number of seats is required').min(1, 'Number of seats must be at least 1'),
+    earlybird_promo: Yup.boolean().required(),
 });
 
 const initialEventValues: IEvent = {
@@ -52,22 +54,20 @@ const initialEventValues: IEvent = {
     location: 0,
     category: 0,
     totalSeats: 0,
+    earlybird_promo: false,
 };
 
-
-
-// NETWORK CALL
 const createEvent = async ({
     organizerId,
     eventName,
     eventDescription,
     startDate,
     endDate,
-    // ticketType,
     originalPrice,
     location,
     category,
     totalSeats,
+    earlybird_promo
 }: IEvent) => {
     const event = await axios.post('http://localhost:8000/api/events', {
         organizer_id: organizerId,
@@ -78,7 +78,8 @@ const createEvent = async ({
         original_price: originalPrice,
         location_id: location,
         total_seats: totalSeats,
-        category_id: category
+        category_id: category,
+        earlybird_promo
     });
     return event;
 };
@@ -92,9 +93,9 @@ function CreateEvent() {
 
     useEffect(() => {
         if (user) {
-            setInitialValues((prevValues) => ({
+            setInitialValues((prevValues: IEvent) => ({
                 ...prevValues,
-                organizerId: user.userId, 
+                organizerId: user.userId,
             }));
         }
     }, [user]);
@@ -152,11 +153,11 @@ function CreateEvent() {
                 }}
             >
                 <Typography component="h1" variant="h4" sx={{ mb: 2 }}>
-                    Post your event!
+                    Post event
                 </Typography>
                 <Formik
-                    initialValues={initialValues} 
-                    enableReinitialize 
+                    initialValues={initialValues}
+                    enableReinitialize
                     validationSchema={eventSchema}
                     onSubmit={handleSubmit}
                 >
@@ -353,6 +354,20 @@ function CreateEvent() {
                                         error={touched.totalSeats && Boolean(errors.totalSeats)}
                                         helperText={touched.totalSeats && errors.totalSeats}
                                     />
+                                    <FormControlLabel
+                                        control={
+                                            <Field
+                                                as={Checkbox}
+                                                name="earlybird_promo"
+                                                color="primary"
+                                                checked={values.earlybird_promo}
+                                                onChange={(e: any) => {
+                                                    setFieldValue('earlybird_promo', e.target.checked);
+                                                }}
+                                            />
+                                        }
+                                        label="Early Bird Promotion"
+                                    />
                                     <Button
                                         type="submit"
                                         fullWidth
@@ -360,7 +375,7 @@ function CreateEvent() {
                                         color="primary"
                                         sx={{ mt: 3, mb: 2 }}
                                     >
-                                        Create Event
+                                        Create event
                                     </Button>
                                 </Box>
                             </Form>
@@ -382,7 +397,7 @@ function CreateEvent() {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary" autoFocus>
-                        OK
+                        Confirm
                     </Button>
                 </DialogActions>
             </Dialog>

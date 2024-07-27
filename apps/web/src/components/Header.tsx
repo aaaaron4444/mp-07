@@ -1,8 +1,24 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, Menu, MenuItem, Divider, IconButton, ListItemIcon, ListItemText, Dialog, DialogTitle, DialogContent, DialogContentText, Avatar } from '@mui/material';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  Menu,
+  MenuItem,
+  Divider,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  Avatar,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
@@ -134,7 +150,6 @@ function Header() {
     </MenuItem>,
   );
 
-
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -174,6 +189,7 @@ function Header() {
                   style={{
                     height: '30px',
                     marginRight: '10px',
+                    filter: 'invert(1)',
                   }}
                 />
               </Link>
@@ -338,6 +354,5 @@ function Header() {
     </>
   );
 }
-
 
 export default Header;

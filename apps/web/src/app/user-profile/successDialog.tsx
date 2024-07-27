@@ -48,7 +48,7 @@ const SuccessDialog: React.FC<SuccessDialogProps> = ({ open, onClose, successMes
             },
           }}
         >
-          CLOSE
+          Close
         </Button>
       </Box>
     </Dialog>

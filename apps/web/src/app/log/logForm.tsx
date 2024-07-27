@@ -9,7 +9,7 @@ import {
     FormControlLabel,
     Link,
 } from '@mui/material';
-import { ILogin } from '../interfaces/login.interface';
+import { ILogin } from '@/interfaces/login.interface';
 
 const loginSchema = Yup.object({
     username: Yup.string().required('Username is required'),

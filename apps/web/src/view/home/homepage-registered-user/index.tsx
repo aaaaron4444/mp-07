@@ -1,29 +1,37 @@
-"use client"
-import React from 'react';
-import { Container, Box, Typography, Button } from '@mui/material';
-import EventList from '../components/eventList.jsx';
-import ReviewList from '../components/reviewList.jsx';
-import Link from 'next/link';
+'use client';
 
-const HomeUserView: React.FC = () => {
-  return (
-    <Container maxWidth="lg">
-      <Box sx={{ width: '100%', maxWidth: '1200px', mx: 'auto', padding: '16px' }}>
-        <Typography variant="h1" textAlign="center" mb={4}>
-          User Page
-        </Typography>
-        <Box sx={{ width: '100%' }}>
-          <EventList />
-        </Box>
-        <Link href="/review" passHref>
-          <Button variant="contained" size="large">
-            Review
-          </Button>
-        </Link>
-        <ReviewList />
-      </Box>
-    </Container>
-  );
-};
+import { useEffect, useState } from 'react';
+import HomeEOView from '../homepage-event-organizer';
+import HomeUserView from '../homepage-registered-user';
+import HomeNotUserView from '../homepage-not-user';
 
-export default HomeUserView;
+interface User {
+  role_id: number;
+  [key: string]: any;
+}
+
+function HomeView() {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  if (!user || !user.role_id) {
+    return <HomeNotUserView />;
+  }
+
+  switch (user.role_id) {
+    case 1:
+      return <HomeUserView />;
+    case 2:
+      return <HomeEOView />;
+    default:
+      return <HomeNotUserView />;
+  }
+}
+
+export default HomeView;

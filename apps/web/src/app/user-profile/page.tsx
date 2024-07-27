@@ -9,11 +9,9 @@ import ProfileForm from './profForm';
 import ConfirmationDialog from './confirmationDialog';
 import SuccessDialog from './successDialog';
 import ErrorDialog from './errorDialog';
-import { RootState } from '@/lib/store';
-
 
 const UserProfile = () => {
-  const user = useAppSelector((state: RootState) => state.auth.user);
+  const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [editedFirstName, setEditedFirstName] = useState(user.firstName);
@@ -88,7 +86,7 @@ const UserProfile = () => {
         justifyContent: 'center',
         alignItems: 'center',
         background:
-          '#ede8f5',
+          'linear-gradient(90deg, rgba(10,97,105,1) 0%, rgba(90,78,130,1) 29%, rgba(90,82,168,1) 65%, rgba(118,91,133,1) 100%)',
       }}
     >
       <Paper

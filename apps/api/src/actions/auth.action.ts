@@ -5,8 +5,7 @@ import { IUser } from '@/interfaces/user.interface';
 import { sign } from 'jsonwebtoken';
 import { HttpException } from '@/exceptions/http.exception';
 
-// Function to generate a random string
-function generateReferralCode(length: number): string {
+function generateReferralCode(length: number) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
     const charactersLength = characters.length;
@@ -16,16 +15,15 @@ function generateReferralCode(length: number): string {
     return result;
 }
 
-// Function to hash password
-async function hashingPassword(password: string): Promise<string> {
+async function hashingPassword(password: string) {
     const salt = await genSalt(10);
-    const hashedPass = await hash(password, salt)
+    const hashedPass = await hash(password, salt);
 
     return hashedPass;
 }
 
 export class AuthAction {
-    async registerAction({
+    registerAction = async ({
         username,
         email,
         password,
@@ -34,12 +32,16 @@ export class AuthAction {
         referral_code,
         point_balance,
         role_id,
-    }: IUser): Promise<IUser> {
+    }: IUser) => {
         const prismaClient = prisma;
 
         try {
-            const isDuplicate = await userAction.findUserByEmailOrUsername(username, email);
-            if (isDuplicate) throw new HttpException(409, 'Username or email already exists');
+            const isDuplicate = await userAction.findUserByEmailOrUsername(
+                username,
+                email,
+            );
+            if (isDuplicate)
+                throw new HttpException(500, 'Username or email already exists');
 
             const ownReferralCode = generateReferralCode(5);
             const hashedPass = await hashingPassword(password);
@@ -64,7 +66,7 @@ export class AuthAction {
                     });
 
                     if (!referrer) {
-                        throw new HttpException(400, 'Invalid refferal code');
+                        throw new HttpException(500, 'Invalid referrer code');
                     }
 
                     const referrerId = referrer.user_id;
@@ -87,6 +89,14 @@ export class AuthAction {
                             valid_until: validUntil,
                         },
                     });
+
+                    await transaction.userDiscount.create({
+                        data: {
+                            user_id: newUser.user_id,
+                            discount_percentage: 10,
+                            is_redeemed: false,
+                        },
+                    });
                 }
 
                 return newUser;
@@ -96,19 +106,20 @@ export class AuthAction {
         } catch (error) {
             throw error;
         }
-    }
+    };
 
-    async loginAction(username: string, password: string): Promise<string> {
+    loginAction = async (username: string, password: string) => {
         try {
             const user = await userAction.findUserByUsername(username);
 
-            if (!user) throw new HttpException(401, 'Incorrect username or password');
-
-            // hashed password comparison
+            if (!user) throw new HttpException(500, 'Incorrect email or password');
+            
             const isPassValid = await compare(password, user.password);
-            if (!isPassValid) throw new HttpException(401, 'Incorrect username or password');
+            if (!isPassValid)
+                throw new HttpException(500, 'Incorrect email or password');
 
             const payload = {
+                userId: user.user_id,
                 username: user.username,
                 email: user.email,
                 first_name: user.first_name,
@@ -120,21 +131,22 @@ export class AuthAction {
             };
 
             const token = sign(payload, String(process.env.API_KEY), {
-                expiresIn: '1h',
+                expiresIn: '1hr',
             });
 
             return token;
         } catch (error) {
             throw error;
         }
-    }
+    };
 
-    async refreshTokenAction(username: string): Promise<string> {
+    refreshTokenAction = async (username: string) => {
         try {
             const user = await userAction.findUserByUsername(username);
-            if (!user) throw new HttpException(401, 'Something went wrong');
+            if (!user) throw new HttpException(500, 'Something went wrong');
 
             const payload = {
+                userId: user.user_id,
                 username: user.username,
                 email: user.email,
                 first_name: user.first_name,
@@ -146,12 +158,12 @@ export class AuthAction {
             };
 
             const token = sign(payload, String(process.env.API_KEY), {
-                expiresIn: '1h',
+                expiresIn: '1hr',
             });
 
             return token;
         } catch (error) {
             throw error;
         }
-    }
+    };
 }

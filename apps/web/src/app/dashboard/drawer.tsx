@@ -2,7 +2,6 @@ import {
     Drawer,
     Divider,
     List,
-    ListItem,
     ListItemIcon,
     ListItemText,
     IconButton,
@@ -12,7 +11,6 @@ import {
 } from '@mui/material';
 import {
     Event,
-    People,
     AttachMoney,
     BarChart,
     ChevronLeft as ChevronLeftIcon,
@@ -27,7 +25,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 1),
     minHeight: 56,
     justifyContent: 'space-between',
-    backgroundColor: '#1e1e2d',
+    backgroundColor: '#4d4d74',
     color: '#fff',
 }));
 
@@ -73,7 +71,7 @@ const DrawerComponent = ({
                     '& .MuiDrawer-paper': {
                         boxSizing: 'border-box',
                         width: drawerWidth,
-                        backgroundColor: '#4a4a5b',
+                        backgroundColor: '#4d4d74',
                         color: '#fff',
                     },
                 }}
@@ -88,7 +86,7 @@ const DrawerComponent = ({
                     '& .MuiDrawer-paper': {
                         boxSizing: 'border-box',
                         width: drawerWidth,
-                        backgroundColor: '#4a4a5b',
+                        backgroundColor: '#4d4d74',
                         color: '#fff',
                     },
                 }}
@@ -109,7 +107,7 @@ const drawerContent = (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Link href="/" passHref>
                     <img
-                        src="/appLogo.png"
+                        src="/appLogo.svg"
                         alt="Logo"
                         style={{
                             height: '32px',
@@ -141,6 +139,12 @@ const drawerContent = (
                 </ListItemIcon>
                 <ListItemText primary="Events" />
             </CustomListItemButton>
+            <CustomListItemButton onClick={() => setSelectedMenu('Transactions')}>
+                <ListItemIcon sx={{ color: 'inherit' }}>
+                    <AttachMoney />
+                </ListItemIcon>
+                <ListItemText primary="Transactions" />
+            </CustomListItemButton>
         </List>
         <Box
             sx={{
@@ -151,8 +155,8 @@ const drawerContent = (
                 textAlign: 'center',
             }}
         >
-            <Typography variant="body2" sx={{ color: '#fff' }}>
-                MP-07
+            <Typography variant="body2">
+                Mini Project
             </Typography>
         </Box>
     </Box>

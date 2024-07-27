@@ -36,11 +36,18 @@ function SuccessRegister() {
             }}
         >
             <Typography
+                component="h1"
+                variant="h3"
+                sx={{ mb: 2, fontWeight: 'bold', animation: 'fadeIn 1s ease-in-out' }}
+            >
+                Congratulations
+            </Typography>
+            <Typography
                 component="h2"
                 variant="h5"
-                sx={{ mb: 4 }}
+                sx={{ mb: 4, animation: 'fadeIn 1.5s ease-in-out' }}
             >
-                Registration Success
+                Successfully Registered
             </Typography>
             <Button
                 variant="contained"
@@ -48,11 +55,15 @@ function SuccessRegister() {
                 onClick={handleGoToLoginpage}
                 sx={{
                     padding: '10px 20px',
-                    fontSize: '1rem',
-                    backgroundColor: '#1976d2',
+                    fontSize: '1.1rem',
+                    animation: 'fadeIn 2s ease-in-out',
+                    backgroundColor: '#145ca4',
+                    ':hover': {
+                        backgroundColor: '#1565c0',
+                    },
                 }}
             >
-                Login
+                login
             </Button>
         </Container>
     );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik, Form, Field, FormikProps } from 'formik';
 import * as Yup from 'yup';
-import { IRegister } from '../interfaces/registration.interface';
+import { IRegister } from '@/interfaces/register.interface';
 import {
     Box,
     TextField,

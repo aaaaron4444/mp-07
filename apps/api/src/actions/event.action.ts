@@ -59,7 +59,7 @@ class EventAction {
       end_date,
       location_id,
       total_seats,
-      earlybird_promo,
+      earlybird_promo
     }: IEvent,
     {
       category_id
@@ -67,13 +67,12 @@ class EventAction {
   ) => {
     try {
 
-      // Check if organizer_id exists and is an organizer
       const organizer = await prisma.user.findUnique({
         where: { user_id: organizer_id },
       });
 
       if (organizer?.role_id !== 2) {
-        throw new Error('User does not exist or not an organizer');
+        throw new Error('User is not exist or not an organizer');
       }
 
       const isDuplicate = await this.findEventByAllDataExceptOrganizerIdAndCategory(
@@ -84,7 +83,7 @@ class EventAction {
         end_date,
         location_id,
         total_seats);
-      if (isDuplicate) throw new Error('The same event already exists');
+      if (isDuplicate) throw new Error('The same exact event already exists');
 
       const event = await prisma.event.create({
         data: {
@@ -155,6 +154,187 @@ class EventAction {
     return { events, total_count };
   };
 
+  getUserDiscount = async (user_id: number) => {
+    const userDiscount = await prisma.userDiscount.findFirst({
+      where: {
+        user_id: Number(user_id),
+        is_redeemed: false,
+      },
+    });
+    return userDiscount;
+
+  };
+
+  createTransaction = async (user_id: number, event_id: number, number_of_ticket: number) => {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { user_id },
+      });
+
+      const userDiscount = await this.getUserDiscount(user_id)
+
+      const event = await prisma.event.findUnique({
+        where: {
+          event_id: event_id,
+        },
+      });
+
+      if (!event) {
+        throw new Error('Event not found');
+      }
+
+      let final_price = event.original_price;
+      let discount_applied = 0;
+      let earlybird_applied = 0;
+      let points_redeemed = 0;
+      let type = 'free';
+
+      if (event.original_price != 0) {
+        type = 'paid';
+        if (userDiscount) {
+          discount_applied = (event.original_price * userDiscount.discount_percentage.toNumber()) / 100;
+          final_price -= discount_applied;
+        }
+
+        const currentDate = new Date();
+        const startDate = new Date(event.start_date);
+        const thirtyDaysBeforeStart = new Date(startDate.getTime() - (30 * 24 * 60 * 60 * 1000));
+
+        if (event.earlybird_promo && currentDate > thirtyDaysBeforeStart) {
+          earlybird_applied = final_price * 0.07;
+          final_price -= earlybird_applied;
+        }
+        final_price = Math.max(final_price, 0);
+
+        final_price *= number_of_ticket;
+
+        if (user?.point_balance != null && user.point_balance > 0) {
+          points_redeemed = Math.min(Math.round(final_price), user.point_balance);
+          final_price = Math.max(final_price - points_redeemed, 0);
+        }
+      }
+
+      const transaction = await prisma.transaction.create({
+        data: {
+          event_id: event_id,
+          user_id: user_id,
+          number_of_ticket: number_of_ticket,
+          type: type,
+          final_price: parseFloat(final_price.toFixed(2)), 
+          discount_applied: parseFloat(discount_applied.toFixed(2)), 
+          earlybird_applied: parseFloat(earlybird_applied.toFixed(2)), 
+          points_redeemed: points_redeemed,
+          ticket_status: 'pending',
+        },
+      });
+
+      return transaction;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  confirmPayment = async (transaction_id: number) => {
+    try {
+      const transaction = await prisma.transaction.findUnique({
+        where: { transaction_id },
+        include: { event: true },
+      });
+
+      if (!transaction) {
+        throw new Error('Transaction not found');
+      }
+
+      const { event_id, number_of_ticket, user_id, points_redeemed } = transaction;
+
+      const updatedTransaction = await prisma.transaction.update({
+        where: { transaction_id },
+        data: { ticket_status: 'success-paid' },
+      });
+
+      const updatedEvent = await prisma.event.update({
+        where: { event_id },
+        data: {
+          available_seats: {
+            decrement: number_of_ticket,
+          },
+        },
+      });
+
+      const updatedUser = await prisma.user.update({
+        where: { user_id },
+        data: {
+          point_balance: {
+            decrement: points_redeemed,
+          },
+        },
+      });
+
+      const userDiscount = await prisma.userDiscount.findFirst({
+        where: {
+          user_id: user_id,
+          is_redeemed: false,
+        },
+      });
+
+      if (userDiscount) {
+        await prisma.userDiscount.update({
+          where: {
+            discount_id: userDiscount.discount_id,
+          },
+          data: {
+            is_redeemed: true,
+          },
+        });
+      }
+
+      return { updatedTransaction, updatedEvent, updatedUser };
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getEventsForReview = async (userId: number) => {
+    try {
+      const events = await prisma.transaction.findMany({
+        where: {
+          user_id: userId,
+          ticket_status: 'success-paid',
+          event: {
+            end_date: {
+              lt: new Date()
+            }
+          }
+        },
+        include: {
+          event: true
+        }
+      });
+
+      return events.map(transaction => transaction.event);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  postReview = async (user_id: number, event_id: number, rating: number, comment: string) => {
+    try {
+      const review = await prisma.review.create({
+        data: {
+          user_id,
+          event_id,
+          rating,
+          comment,
+          created_at: new Date()
+        }
+      });
+
+      return review;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   findEventsByOrganizerId = async (query: any) => {
     const { organizer_id } = query;
 
@@ -199,6 +379,110 @@ class EventAction {
       throw error;
     }
   };
-  
+
+  findEventsStatisticsByOrganizerId = async (organizer_id: number) => {
+    const eventCount = await prisma.event.count({
+      where: {
+        organizer_id,
+      },
+    });
+
+    const totalSeats = await prisma.event.aggregate({
+      _sum: {
+        total_seats: true,
+      },
+      where: {
+        organizer_id,
+      },
+    });
+
+    const availableSeats = await prisma.event.aggregate({
+      _sum: {
+        available_seats: true,
+      },
+      where: {
+        organizer_id,
+      },
+    });
+
+    const completedEvents = await prisma.event.count({
+      where: {
+        organizer_id,
+        end_date: {
+          lt: new Date(),
+        },
+      },
+    });
+
+    const eventsByLocation = await prisma.event.groupBy({
+      by: ['location_id'],
+      _count: {
+        event_id: true,
+      },
+      where: {
+        organizer_id,
+      },
+    });
+
+    const locationIds = eventsByLocation.map(loc => loc.location_id);
+    const locations = await prisma.location.findMany({
+      where: {
+        location_id: {
+          in: locationIds
+        }
+      },
+      select: {
+        location_id: true,
+        city_name: true,
+      }
+    });
+
+    const eventsByPrice = await prisma.event.groupBy({
+      by: ['original_price'],
+      _count: {
+        event_id: true,
+      },
+      where: {
+        organizer_id,
+      },
+    });
+
+    const eventsByLocationWithCity = eventsByLocation.map(eventLoc => {
+      const location = locations.find(loc => loc.location_id === eventLoc.location_id);
+      return {
+        city_name: location?.city_name || `Location ${eventLoc.location_id}`,
+        event_count: eventLoc._count.event_id,
+      };
+    });
+
+    return {
+      eventCount,
+      totalSeats: totalSeats._sum.total_seats || 0,
+      availableSeats: availableSeats._sum.available_seats || 0,
+      completedEvents,
+      eventsByLocation: eventsByLocationWithCity,
+      eventsByPrice,
+    };
+  };
+
+  getTransactionsByOrganizerId = async (organizer_id: number) => {
+    try {
+      const transactions = await prisma.transaction.findMany({
+        where: {
+          event: {
+            organizer_id: organizer_id
+          }
+        },
+        include: {
+          event: true
+        }
+      });
+      return transactions;
+    } catch (error) {
+      throw error;
+    }
+  };
+
 }
+
 export default new EventAction();

@@ -1,34 +1,54 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box, Avatar } from '@mui/material';
+import Rating from '@mui/material/Rating';
+import { Avatar, AvatarGroup, Box, IconButton, Card, Divider, CardOverflow, CardContent, Typography } from '@mui/joy';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+// import { Card, CardContent, Typography, Box, Avatar } from '@mui/material';
 
 interface ReviewCardProps {
-  title: string;
-  body: string;
+  eventName: string;
+  comment: string;
   reviewerName: string;
   date: string;
   rating: number;
 }
 
-const ReviewCard: React.FC<ReviewCardProps> = ({ title, body, reviewerName, date, rating }) => {
+const ReviewCard: React.FC<ReviewCardProps> = ({ eventName, comment, reviewerName, date, rating }) => {
   return (
-    <Card variant="outlined">
+    <Card
+      variant="outlined"
+      sx={{
+        width: 320,
+        height: 200,
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <Avatar alt={reviewerName} src="/avatar.jpg" size="lg" />
+        <Rating value={rating} precision={0.25} readOnly />
+      </Box>
       <CardContent>
-        <Typography variant="h6" component="div">
-          {title}
+        <Typography level="title-lg">{eventName}</Typography>
+        <Typography level="body-sm">
+          {comment}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {body}
-        </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-          <Avatar alt={reviewerName} src="/avatar.jpg" />
-          <Box sx={{ ml: 2 }}>
-            <Typography variant="body2">{reviewerName}</Typography>
-            <Typography variant="body2" color="text.secondary">
-              {date}
-            </Typography>
-          </Box>
-        </Box>
       </CardContent>
+      <CardOverflow variant="soft" sx={{ bgcolor: '#203160' }}>
+        <Divider inset="context" />
+        <CardContent orientation="horizontal">
+          <Typography level="body-xs" fontWeight="md" textColor="white">
+            {reviewerName}
+          </Typography>
+          <Divider orientation="vertical" sx={{ height: 20, bgcolor: 'white' }} />
+          <Typography level="body-xs" fontWeight="md" textColor="white">
+            {date}
+          </Typography>
+        </CardContent>
+      </CardOverflow>
     </Card>
   );
 };

@@ -20,42 +20,16 @@ model User {
   created_at        DateTime       @default(now())
   updated_at        DateTime       @updatedAt
   role              Role           @relation(fields: [role_id], references: [id])
-  events            Event[]        @relation("EventOrganizer")
+  event             Event[]        @relation("EventOrganizer")
   referralsGiven    Referral[]     @relation("Referrer")
   referralsReceived Referral[]     @relation("Referred")
   transaction       Transaction[]
   userDiscounts     UserDiscount[]
+  reviews           Review[]
 
   @@index([username])
   @@index([email])
   @@index([own_referral_code])
-}
-
-model Transaction {
-  transaction_id  Int     @id @default(autoincrement())
-  event_id        Int
-  user_id         Int
-  number_of_ticket Int
-  type            String  //'free' or 'paid'
-  final_price     Float
-  discount_applied Float
-  earlybird_applied Float
-  points_redeemed Int
-  ticket_status   String  
-  event           Event   @relation(fields: [event_id], references: [event_id])
-  user            User    @relation(fields: [user_id], references: [user_id])
-}
-
-
-model UserDiscount {
-  discount_id        Int      @id @default(autoincrement())
-  user_id            Int
-  discount_percentage Decimal
-  is_redeemed        Boolean
-  created_at         DateTime @default(now())
-  user               User     @relation(fields: [user_id], references: [user_id])
-
-  @@index([user_id])
 }
 
 model Referral {
@@ -92,16 +66,14 @@ model Event {
   location_id       Int
   total_seats       Int
   available_seats   Int
+  earlybird_promo   Boolean          @default(false)
   created_at        DateTime         @default(now())
   updated_at        DateTime         @updatedAt
   organizer         User             @relation("EventOrganizer", fields: [organizer_id], references: [user_id])
   location          Location         @relation(fields: [location_id], references: [location_id])
-  transactions      Transaction[]
   categories        Event_Category[]
-  earlybird_promo  Boolean     @default(false)
-
-  @@index([organizer_id])
-  @@index([location_id])
+  transactions      Transaction[]
+  reviews           Review[]
 }
 
 model Location {
@@ -123,4 +95,41 @@ model Event_Category {
   category    Category @relation(fields: [category_id], references: [category_id])
 
   @@id([event_id, category_id])
+}
+
+model Transaction {
+  transaction_id    Int    @id @default(autoincrement())
+  event_id          Int
+  user_id           Int
+  number_of_ticket  Int
+  type              String //'free' or 'paid'
+  final_price       Float
+  discount_applied  Float
+  earlybird_applied Float
+  points_redeemed   Int
+  ticket_status     String // Can be "pending" or "success-paid"
+  event             Event  @relation(fields: [event_id], references: [event_id])
+  user              User   @relation(fields: [user_id], references: [user_id])
+}
+
+model UserDiscount {
+  discount_id         Int      @id @default(autoincrement())
+  user_id             Int
+  discount_percentage Decimal
+  is_redeemed         Boolean
+  created_at          DateTime @default(now())
+  user                User     @relation(fields: [user_id], references: [user_id])
+
+  @@index([user_id])
+}
+
+model Review {
+  review_id  Int      @id @default(autoincrement())
+  user_id    Int
+  event_id   Int
+  rating     Int
+  comment    String   @db.VarChar(2000)
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [user_id], references: [user_id])
+  event      Event    @relation(fields: [event_id], references: [event_id])
 }

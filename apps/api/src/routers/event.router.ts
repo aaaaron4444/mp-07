@@ -2,8 +2,8 @@ import { EventController } from '@/controllers/event.controller';
 import { Router } from 'express';
 
 export class EventRouter {
-  private router: Router = Router();
-  private eventController = new EventController();
+  public router: Router = Router();
+  public eventController = new EventController();
 
   constructor() {
     this.initializeRoutes();
@@ -13,6 +13,20 @@ export class EventRouter {
     this.router.post('/events', this.eventController.createEvent);
     this.router.get('/events', this.eventController.getEvents);
     this.router.get('/events/:event_id', this.eventController.getEvent);
+    this.router.post('/transaction', this.eventController.createTransaction);
+    this.router.patch('/payment/:transaction_id', this.eventController.confirmPayment);
+    this.router.get('/events-for-review/:userId', this.eventController.getEventsForReview);
+    this.router.post('/review', this.eventController.postReview);
+    this.router.get('/user-discount/:user_id', this.eventController.getUserDiscount);
+    this.router.get(
+      '/events-dashboard/:organizer_id',
+      this.eventController.getEventsByOrganizerId,
+    );
+    this.router.get(
+      '/events-statistics/:organizer_id',
+      this.eventController.getEventsStatisticsByOrganizerId
+    );
+    this.router.get('/transactions/:organizer_id', this.eventController.getTransactionsByOrganizerId);
   }
 
   getRouter(): Router {

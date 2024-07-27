@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ILogin } from '../interfaces/login.interface';
+import { ILogin } from '@/interfaces/login.interface';
 import {
     Box,
     Container,

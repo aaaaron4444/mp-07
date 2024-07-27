@@ -1,13 +1,13 @@
 'use client';
 import { Box, Button, Container, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-function SuccessCreate() {
+function SuccessCreateEvent() {
   const router = useRouter();
 
   const handleGoToHomepageEOPage = () => {
-    router.push('/eo');
+    router.push('/');
   };
 
   useEffect(() => {
@@ -35,6 +35,13 @@ function SuccessCreate() {
       }}
     >
       <Typography
+        component="h1"
+        variant="h3"
+        sx={{ mb: 2, fontWeight: 'bold', animation: 'fadeIn 1s ease-in-out' }}
+      >
+        Congratulations !
+      </Typography>
+      <Typography
         component="h2"
         variant="h5"
         sx={{ mb: 4, animation: 'fadeIn 1.5s ease-in-out' }}
@@ -61,4 +68,4 @@ function SuccessCreate() {
   );
 }
 
-export default SuccessCreate;
+export default SuccessCreateEvent;

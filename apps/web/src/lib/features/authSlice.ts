@@ -176,7 +176,7 @@ export const checkToken = (token: string) => async (dispatch: Dispatch) => {
                 roleName: payload.role_name,
             }),
         );
-        localStorage.setItem('user', JSON.stringify(payload));
+        localStorage.setItem('user', JSON.stringify(payload)); // Simpan user ke localStorage
         localStorage.setItem('token', String(data?.data));
     } catch (error) {
         console.log(error);

@@ -22,7 +22,7 @@ function Footer() {
             }}
           >
             <Typography variant="body2" color="text.secondary" align="center">
-              MP07 - Albert Aaron
+              Mini Project 7
             </Typography>
           </Box>
         </>
@@ -41,7 +41,7 @@ function Footer() {
             sx={{ display: 'flex', justifyContent: 'space-between' }}
           >
             <Typography variant="body2" color="text.secondary" align="center">
-              MP07 - Albert Aaron
+              Mini Project 7
             </Typography>
           </Container>
         </Box>

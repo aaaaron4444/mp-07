@@ -10,19 +10,9 @@ interface ErrorDialogProps {
 
 const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, onClose, errorMessage }) => {
     return (
-        <Dialog
-            open={open}
-            onClose={onClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-        >
+        <Dialog open={open} onClose={onClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
             <DialogTitle id="alert-dialog-title">
-                <Box sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1
-                }}
-                >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <ErrorIcon sx={{ color: '#cc0000' }} />
                     Update Error
                 </Box>

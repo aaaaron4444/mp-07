@@ -13,5 +13,3 @@ export interface IEvent {
 export interface IEventCategory {
   category_id: number;
 }
-
-
