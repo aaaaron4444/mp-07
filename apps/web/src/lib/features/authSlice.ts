@@ -116,7 +116,7 @@ export const login =
             try {
                 const { username, password } = params;
 
-                const { data } = await instance.post('/auth/login', {
+                const { data } = await instance.post('auth/login', {
                     username,
                     password,
                 });

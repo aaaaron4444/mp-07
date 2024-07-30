@@ -143,7 +143,7 @@ const Statistics = ({ organizer_id }: StatisticsProps) => {
                     textAlign: 'center',
                     mb: 4,
                     py: 4,
-                    background: 'linear-gradient(90deg, rgba(33,71,130,1) 0%, rgba(52,52,91,1) 27%, rgba(65,42,88,1) 69%, rgba(77,63,79,1) 100%)',
+                    background: 'orange',
                     borderRadius: '8px',
                     boxShadow: 3,
                 }}

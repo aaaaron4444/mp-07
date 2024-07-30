@@ -107,7 +107,7 @@ const drawerContent = (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Link href="/" passHref>
                     <img
-                        src="/appLogo.svg"
+                        src="/appLogo.png"
                         alt="Logo"
                         style={{
                             height: '32px',

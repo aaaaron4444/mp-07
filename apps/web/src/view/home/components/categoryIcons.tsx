@@ -28,7 +28,7 @@ const CategoryIcons: React.FC<{ selectedCategory: string, onChange: (value: stri
         gutterBottom
         sx={{
           fontWeight: 'bold',
-          background: 'linear-gradient(90deg, #228d96, #0a6169)',
+          background: 'white',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)',

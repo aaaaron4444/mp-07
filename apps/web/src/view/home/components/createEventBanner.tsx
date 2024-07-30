@@ -11,7 +11,7 @@ const CreateEventBanner: React.FC = () => {
         p: 2,
         borderRadius: 6,
         background:
-          'linear-gradient(90deg, rgba(10,97,105,1) 0%, rgba(90,78,130,1) 29%, rgba(90,82,168,1) 65%, rgba(118,91,133,1) 100%)',
+          'orange',
         color: '#fff',
       }}
     >
@@ -21,7 +21,7 @@ const CreateEventBanner: React.FC = () => {
           fontSize: { xs: '38px', sm: '52px', md: '64px' },
           fontWeight: 800,
           background:
-            'linear-gradient(90deg, rgba(195,194,208,1) 0%, rgba(186,186,228,1) 22%, rgba(196,230,237,1) 100%)',
+            'white',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
         }}

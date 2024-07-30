@@ -62,7 +62,7 @@ function HeroSection() {
                         fontWeight: 'bold',
                         animation: 'fadeInUp 1s ease-in-out',
                         background:
-                            'linear-gradient(90deg, rgba(195,194,208,1) 0%, rgba(186,186,228,1) 22%, rgba(196,230,237,1) 100%)',
+                            'white',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         '@keyframes fadeInUp': {
@@ -81,7 +81,7 @@ function HeroSection() {
                         fontSize: { xs: '1rem', md: '1.25rem' },
                         animation: 'fadeInUp 1.5s ease-in-out',
                         background:
-                            'linear-gradient(90deg, rgba(195,194,208,1) 0%, rgba(186,186,228,1) 22%, rgba(196,230,237,1) 100%)',
+                            'white',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         '@keyframes fadeInUp': {
@@ -98,7 +98,7 @@ function HeroSection() {
                         marginTop: '20px',
                         padding: '12px 24px',
                         fontSize: '18px',
-                        backgroundColor: '#ff4703',
+                        backgroundColor: '#2adf00',
                         color: '#fff',
                         borderRadius: '50px',
                         '&:hover': {

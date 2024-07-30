@@ -19,7 +19,6 @@ import {
   DialogContentText,
   Avatar,
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -70,7 +69,7 @@ function Header() {
       onClick={handleClose}
       sx={{
         borderRadius: '5px',
-        '&:hover': { backgroundColor: '#f0f0f0' },
+        '&:hover': { backgroundColor: 'blue' },
       }}
     >
       <ListItemIcon>
@@ -252,16 +251,16 @@ function Header() {
             ) : (
               <>
                 <Button
-                  href="/login"
-                  variant={path.startsWith('/login') ? 'contained' : 'outlined'}
+                  href="/log"
+                  variant={path.startsWith('/log') ? 'contained' : 'outlined'}
                   sx={{
-                    color: path.startsWith('/login') ? '#fff' : '#fff',
-                    backgroundColor: path.startsWith('/login')
+                    color: path.startsWith('/log') ? '#fff' : '#fff',
+                    backgroundColor: path.startsWith('/log')
                       ? '#228d96'
                       : 'transparent',
                     borderColor: '#fff',
                     '&:hover': {
-                      backgroundColor: path.startsWith('/login')
+                      backgroundColor: path.startsWith('/log')
                         ? '#228d96'
                         : '#0a6169',
                     },
@@ -302,7 +301,7 @@ function Header() {
         aria-describedby="logout-dialog-description"
         sx={{
           '.MuiPaper-root': {
-            background: 'linear-gradient(90deg, rgba(10,97,105,1) 0%, rgba(90,78,130,1) 29%, rgba(90,82,168,1) 65%, rgba(118,91,133,1) 100%)',
+            background: 'dark-blue',
             color: '#fff',
             borderRadius: '10px',
             maxWidth: '600px',

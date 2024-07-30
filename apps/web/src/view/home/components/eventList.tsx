@@ -86,8 +86,6 @@ const EventList: React.FC = () => {
         debouncedFetchEvents(1, searchText, location, value);
     };
 
-    const router = useRouter();
-
     const handleBuyTicket = (event_id: number) => {
         if (router && typeof window !== 'undefined') {
             router.push(`/transaction?event_id=${event_id}`);

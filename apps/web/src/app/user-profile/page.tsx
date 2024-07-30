@@ -86,7 +86,7 @@ const UserProfile = () => {
         justifyContent: 'center',
         alignItems: 'center',
         background:
-          'linear-gradient(90deg, rgba(10,97,105,1) 0%, rgba(90,78,130,1) 29%, rgba(90,82,168,1) 65%, rgba(118,91,133,1) 100%)',
+          'dark-blue',
       }}
     >
       <Paper
